@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using CompetitionMarsSeCsharp.Pages;
 using CompetitionMarsSeCsharp.Pages.Profile;
 using CompetitionMarsSeCsharp.TestData;
@@ -24,6 +23,9 @@ namespace CompetitionMarsSeCsharp.Tests
             }
             profilePage.TabProfile.Click();
             profilePage.TabCert.Click();
+
+            // Initial State: Make sure no existing items present
+            RemoveItems();
         }
 
         [Test]
@@ -46,15 +48,18 @@ namespace CompetitionMarsSeCsharp.Tests
             CertificationsTab certTab = new CertificationsTab(driver);
             var certModel = CertJsonDataSource();
             int modelCount = certModel.Count;
-            Random random = new Random();
-            int index = random.Next(0, modelCount);
-            // Select a random item from source to add then update after
+            // Commenting out using random since we will be using an item not being used by other tests
+            //Random random = new Random();
+            //int index = random.Next(0, modelCount);
+            int index = 0;
+            // Select item 1 from source to add then update after. Item 1 is not used on other tests.
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
 
-            int exclude = index;
-            int newIndex;
-            do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
+            //int exclude = index;
+            //int newIndex;
+            //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
+            int newIndex = 1;
             certTab.UpdateCertItemByModel(certModel[index], certModel[newIndex]);
             certTab.AssertBubble("updated", certModel[newIndex].Certificate);
 
@@ -73,9 +78,10 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             CertificationsTab certTab = new CertificationsTab(driver);
             var certModel = CertJsonDataSource();
-            Random random = new Random();
-            int index = random.Next(0, certModel.Count);
-            // Select a random item from source to add then delete after
+            //Random random = new Random();
+            //int index = random.Next(0, certModel.Count);
+            int index = 2;
+            // Select item 3 from source to add then delete after
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
 
@@ -93,9 +99,10 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             CertificationsTab certTab = new CertificationsTab(driver);
             var certModel = CertJsonDataSource();
-            Random random = new Random();
-            int index = random.Next(0, certModel.Count);
-            // Select a random item from source to add then add again
+            //Random random = new Random();
+            //int index = random.Next(0, certModel.Count);
+            int index = 3;
+            // Select item 4 (index 3) from source to add then add again
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
             int rowCount = certTab.GetRowCount();
@@ -109,9 +116,9 @@ namespace CompetitionMarsSeCsharp.Tests
         }
 
         [TearDown]
-        public void TearDown()
+        public void RemoveItems()
         {
-            // Remove all Certs remaining
+            // Reset State: Remove all items remaining
             CertificationsTab certTab = new CertificationsTab(driver);
             int rowCount = certTab.GetRowCount();
             foreach (int value in Enumerable.Range(1, rowCount)) // https://kodify.net/csharp/loop/range/
@@ -133,7 +140,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public static IEnumerable<CertModel> CertJsonData()
         {
             var certModel = CertJsonDataSource();
-            foreach (var certData in certModel)
+            foreach (var certData in certModel.Skip(4))  // Skip first 4 items as this will be used in other tests
             {
                 yield return certData;
             }

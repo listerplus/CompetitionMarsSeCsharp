@@ -22,6 +22,9 @@ namespace CompetitionMarsSeCsharp.Tests
             }
             profilePage.TabProfile.Click();
             profilePage.TabEdu.Click();
+
+            // Initial State: Make sure no existing items present
+            RemoveItems();
         }
 
         [Test]
@@ -43,15 +46,17 @@ namespace CompetitionMarsSeCsharp.Tests
             EducationTab eduTab = new EducationTab(driver);
             var eduModel = EduJsonDataSource();
             int modelCount = eduModel.Count;
-            Random random = new Random();
-            int index = random.Next(0, modelCount);
-            // Select a random item from source to add then update after
+            //Random random = new Random();
+            //int index = random.Next(0, modelCount);
+            int index = 0;
+            // Select item from source to add then update after
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Thread.Sleep(1000);
 
-            int exclude = index;
-            int newIndex;
-            do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
+            //int exclude = index;
+            //int newIndex;
+            int newIndex = 1;
+            //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
             eduTab.UpdateEduItemByModel(eduModel[index], eduModel[newIndex]);
             eduTab.AssertBubble("updated");
 
@@ -67,9 +72,10 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             EducationTab eduTab = new EducationTab(driver);
             var eduModel = EduJsonDataSource();
-            Random random = new Random();
-            int index = random.Next(0, eduModel.Count);
-            // Select a random item from source to add then delete after
+            //Random random = new Random();
+            //int index = random.Next(0, eduModel.Count);
+            int index = 2;
+            // Select item from source to add then delete after
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Thread.Sleep(1000);
 
@@ -86,9 +92,10 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             EducationTab eduTab = new EducationTab(driver);
             var eduModel = EduJsonDataSource();
-            Random random = new Random();
-            int index = random.Next(0, eduModel.Count);
-            // Select a random item from source to add then add again
+            //Random random = new Random();
+            //int index = random.Next(0, eduModel.Count);
+            int index = 3;
+            // Select item from source to add then add again
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Thread.Sleep(1000);
             int rowCount = eduTab.GetRowCount();
@@ -101,10 +108,17 @@ namespace CompetitionMarsSeCsharp.Tests
             eduTab.ClickRemoveIcon(row);
         }
 
-        //[TearDown]
-        public void TearDown()
+        [TearDown]
+        public void RemoveItems()
         {
-            // Remove all Education items
+            // Remove all items
+            EducationTab eduTab = new EducationTab(driver);
+            int rowCount = eduTab.GetRowCount();
+            foreach (int value in Enumerable.Range(1, rowCount))
+            {
+                eduTab.ClickRemoveIcon(1);
+                Thread.Sleep(500);
+            }
         }
 
         public static List<EduModel> EduJsonDataSource()
@@ -119,7 +133,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public static IEnumerable<EduModel> EduJsonData()
         {
             var eduModel = EduJsonDataSource();
-            foreach (var eduData in eduModel)
+            foreach (var eduData in eduModel.Skip(4))  // Skip first 4 items as this will be used in other tests
             {
                 yield return eduData;
             }
