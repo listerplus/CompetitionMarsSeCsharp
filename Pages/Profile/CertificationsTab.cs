@@ -121,7 +121,7 @@ namespace CompetitionMarsSeCsharp.Pages.Profile
                     Assert.That(bubbleSuccess.GetCssValue("color"), Is.EqualTo(popupSuccessColor));
                     break;
                 case "added":
-                    Assert.That(bubbleSuccess.Text, Is.EqualTo($"{name} has been added to your certificatio"));
+                    Assert.That(bubbleSuccess.Text, Is.EqualTo($"{name} has been added to your certification"));
                     Assert.That(bubbleSuccess.GetCssValue("color"), Is.EqualTo(popupSuccessColor));
                     break;
                 case "deleted":
