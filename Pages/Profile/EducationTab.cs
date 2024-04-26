@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using CompetitionMarsSeCsharp.TestData;
+﻿using CompetitionMarsSeCsharp.TestData;
 using CompetitionMarsSeCsharp.Utilities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
