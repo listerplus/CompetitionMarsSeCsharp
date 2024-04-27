@@ -108,11 +108,21 @@ namespace CompetitionMarsSeCsharp.Tests
             int rowCount = certTab.GetRowCount();
 
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
-            certTab.AssertBubble("error");
+            certTab.AssertBubble("error-duplicate");
             Assert.That(certTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
             // remove added
             int row = certTab.GetCertificationItemRow(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             certTab.ClickRemoveIcon(row);
+        }
+
+        [Test]
+        public void Test05UnableToAddIncompleteData()
+        {
+            CertificationsTab certTab = new CertificationsTab(driver);
+            certTab.BtnAddNew.Click();
+            certTab.BtnAdd.Click();
+            certTab.AssertBubble("error-incomplete");
+            certTab.BtnCancel.Click();
         }
 
         [TearDown]

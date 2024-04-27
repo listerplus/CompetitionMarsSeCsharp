@@ -101,11 +101,21 @@ namespace CompetitionMarsSeCsharp.Tests
             int rowCount = eduTab.GetRowCount();
 
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
-            eduTab.AssertBubble("error");
+            eduTab.AssertBubble("error-duplicate");
             Assert.That(eduTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
             // remove added
             int row = eduTab.GetEducationItemRow(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             eduTab.ClickRemoveIcon(row);
+        }
+
+        [Test]
+        public void Test05UnableToAddIncompleteData()
+        {
+            EducationTab eduTab = new EducationTab(driver);
+            eduTab.BtnAddNew.Click();
+            eduTab.BtnAdd.Click();
+            eduTab.AssertBubble("error-incomplete");
+            eduTab.BtnCancel.Click();
         }
 
         [TearDown]

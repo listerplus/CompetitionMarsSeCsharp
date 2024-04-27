@@ -140,9 +140,12 @@ namespace CompetitionMarsSeCsharp.Pages.Profile
                     Assert.AreEqual($"Education entry successfully removed", bubbleSuccess.Text);
                     Assert.AreEqual(popupSuccessColor, bubbleSuccess.GetCssValue("color"));
                     break;
-                case "error":
+                case "error-duplicate":
                     Assert.AreEqual($"This information is already exist.", bubbleError.Text);
                     ReportLog.Info($"bg color: {bubbleError.GetCssValue("color")}");
+                    break;
+                case "error-incomplete":
+                    Assert.That(bubbleError.Text, Is.EqualTo($"Please enter all the fields"));
                     break;
                 default:
                     Assert.Fail();
