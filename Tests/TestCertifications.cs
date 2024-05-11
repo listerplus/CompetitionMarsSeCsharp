@@ -15,18 +15,9 @@ namespace CompetitionMarsSeCsharp.Tests
         [SetUp]
         public void Setup()
         {
-            HomePage homePage = new HomePage(driver);
+            GoToProfile();
             ProfilePage profilePage = new ProfilePage(driver);
-            if (!profilePage.IsAtProfilePage())
-            {
-                homePage.Login();
-                Thread.Sleep(2000);
-            }
-            profilePage.TabProfile.Click();
             profilePage.TabCert.Click();
-
-            // Initial State: Make sure no existing items present
-            RemoveItems();
         }
 
         [Test]

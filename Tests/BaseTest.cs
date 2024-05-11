@@ -3,6 +3,8 @@ using AventStack.ExtentReports.Model;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using CompetitionMarsSeCsharp.Utilities;
+using CompetitionMarsSeCsharp.Pages.Profile;
+using CompetitionMarsSeCsharp.Pages;
 
 namespace CompetitionMarsSeCsharp.Tests
 {
@@ -88,5 +90,18 @@ namespace CompetitionMarsSeCsharp.Tests
             var screenshot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
             return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, name).Build();
         }
+
+        public void GoToProfile()
+        {
+            HomePage homePage = new HomePage(driver);
+            ProfilePage profilePage = new ProfilePage(driver);
+            if (!profilePage.IsAtProfilePage())
+            {
+                homePage.Login();
+                Thread.Sleep(2000);
+            }
+            profilePage.TabProfile.Click();
+        }
+
     }
 }
