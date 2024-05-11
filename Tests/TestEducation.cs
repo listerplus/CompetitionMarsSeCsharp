@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CompetitionMarsSeCsharp.AssertHelpers;
 using CompetitionMarsSeCsharp.Pages;
 using CompetitionMarsSeCsharp.Pages.Profile;
 using CompetitionMarsSeCsharp.TestData;
@@ -32,8 +33,9 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test01AddEducation(EduModel eduModel)
         {
             EducationTab eduTab = new EducationTab(driver);
+            EduAssertHelper eduAssert = new EduAssertHelper(driver);
             eduTab.AddEducation(eduModel.University, eduModel.Country, eduModel.Title, eduModel.Degree, eduModel.Year);
-            eduTab.AssertBubble("added");
+            eduAssert.AssertBubble("added");
             bool isPresent = eduTab.IsEducationPresent(eduModel.University, eduModel.Country, eduModel.Title, eduModel.Degree, eduModel.Year);
             Assert.IsTrue(isPresent);
             // Remove added item to maintain state
@@ -44,6 +46,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test02UpdateEducation()
         {
             EducationTab eduTab = new EducationTab(driver);
+            EduAssertHelper eduAssert = new EduAssertHelper(driver);
             var eduModel = EduJsonDataSource();
             int modelCount = eduModel.Count;
             //Random random = new Random();
@@ -58,7 +61,7 @@ namespace CompetitionMarsSeCsharp.Tests
             int newIndex = 1;
             //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
             eduTab.UpdateEduItemByModel(eduModel[index], eduModel[newIndex]);
-            eduTab.AssertBubble("updated");
+            eduAssert.AssertBubble("updated");
 
             bool isPresent = eduTab.IsEducationPresent(eduModel[newIndex].University, eduModel[newIndex].Country, eduModel[newIndex].Title, eduModel[newIndex].Degree, eduModel[newIndex].Year);
             Assert.IsTrue(isPresent);
@@ -71,6 +74,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test03DeleteEducation()
         {
             EducationTab eduTab = new EducationTab(driver);
+            EduAssertHelper eduAssert = new EduAssertHelper(driver);
             var eduModel = EduJsonDataSource();
             //Random random = new Random();
             //int index = random.Next(0, eduModel.Count);
@@ -81,7 +85,7 @@ namespace CompetitionMarsSeCsharp.Tests
 
             int row = eduTab.GetEducationItemRow(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             eduTab.ClickRemoveIcon(row);
-            eduTab.AssertBubble("deleted");
+            eduAssert.AssertBubble("deleted");
 
             bool isPresent = eduTab.IsEducationPresent(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Assert.IsFalse(isPresent);
@@ -91,6 +95,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test04UnableToAddDuplicate()
         {
             EducationTab eduTab = new EducationTab(driver);
+            EduAssertHelper eduAssert = new EduAssertHelper(driver);
             var eduModel = EduJsonDataSource();
             //Random random = new Random();
             //int index = random.Next(0, eduModel.Count);
@@ -101,7 +106,7 @@ namespace CompetitionMarsSeCsharp.Tests
             int rowCount = eduTab.GetRowCount();
 
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
-            eduTab.AssertBubble("error-duplicate");
+            eduAssert.AssertBubble("error-duplicate");
             Assert.That(eduTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
             // remove added
             int row = eduTab.GetEducationItemRow(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
@@ -112,9 +117,10 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test05UnableToAddIncompleteData()
         {
             EducationTab eduTab = new EducationTab(driver);
+            EduAssertHelper eduAssert = new EduAssertHelper(driver);
             eduTab.BtnAddNew.Click();
             eduTab.BtnAdd.Click();
-            eduTab.AssertBubble("error-incomplete");
+            eduAssert.AssertBubble("error-incomplete");
             eduTab.BtnCancel.Click();
         }
 

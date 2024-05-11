@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CompetitionMarsSeCsharp.AssertHelpers;
 using CompetitionMarsSeCsharp.Pages;
 using CompetitionMarsSeCsharp.Pages.Profile;
 using CompetitionMarsSeCsharp.TestData;
@@ -33,8 +34,9 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test01AddCert(CertModel certModel)
         {
             CertificationsTab certTab = new CertificationsTab(driver);
+            CertAssertHelper certAssert = new CertAssertHelper(driver);
             certTab.AddCertification(certModel.Certificate, certModel.From, certModel.Year);
-            certTab.AssertBubble("added", certModel.Certificate);
+            certAssert.AssertBubble("added", certModel.Certificate);
             bool isPresent = certTab.IsCertificationPresent(certModel.Certificate, certModel.From, certModel.Year);
             Assert.IsTrue(isPresent);
             ReportLog.Info($"Successfully added cert: {certModel.Certificate}");
@@ -46,6 +48,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test02UpdateCert()
         {
             CertificationsTab certTab = new CertificationsTab(driver);
+            CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
             int modelCount = certModel.Count;
             // Commenting out using random since we will be using an item not being used by other tests
@@ -61,7 +64,7 @@ namespace CompetitionMarsSeCsharp.Tests
             //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
             int newIndex = 1;
             certTab.UpdateCertItemByModel(certModel[index], certModel[newIndex]);
-            certTab.AssertBubble("updated", certModel[newIndex].Certificate);
+            certAssert.AssertBubble("updated", certModel[newIndex].Certificate);
 
             bool isPresent = certTab.IsCertificationPresent(certModel[newIndex].Certificate, certModel[newIndex].From, certModel[newIndex].Year);
             Assert.IsTrue(isPresent);
@@ -77,6 +80,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test03DeleteCert()
         {
             CertificationsTab certTab = new CertificationsTab(driver);
+            CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
             //Random random = new Random();
             //int index = random.Next(0, certModel.Count);
@@ -87,7 +91,7 @@ namespace CompetitionMarsSeCsharp.Tests
 
             int row = certTab.GetCertificationItemRow(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             certTab.ClickRemoveIcon(row);
-            certTab.AssertBubble("deleted", certModel[index].Certificate);
+            certAssert.AssertBubble("deleted", certModel[index].Certificate);
 
             bool isPresent = certTab.IsCertificationPresent(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Assert.IsFalse(isPresent);
@@ -98,6 +102,7 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test04UnableToAddDuplicate()
         {
             CertificationsTab certTab = new CertificationsTab(driver);
+            CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
             //Random random = new Random();
             //int index = random.Next(0, certModel.Count);
@@ -108,7 +113,7 @@ namespace CompetitionMarsSeCsharp.Tests
             int rowCount = certTab.GetRowCount();
 
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
-            certTab.AssertBubble("error-duplicate");
+            certAssert.AssertBubble("error-duplicate");
             Assert.That(certTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
             // remove added
             int row = certTab.GetCertificationItemRow(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
@@ -119,9 +124,10 @@ namespace CompetitionMarsSeCsharp.Tests
         public void Test05UnableToAddIncompleteData()
         {
             CertificationsTab certTab = new CertificationsTab(driver);
+            CertAssertHelper certAssert = new CertAssertHelper(driver);
             certTab.BtnAddNew.Click();
             certTab.BtnAdd.Click();
-            certTab.AssertBubble("error-incomplete");
+            certAssert.AssertBubble("error-incomplete");
             certTab.BtnCancel.Click();
         }
 
