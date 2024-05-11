@@ -1,0 +1,79 @@
+[
+	{
+		"Country": "Zimbabwe",
+		"University": "University of Zimbabwe",
+		"Title": "M.A",
+		"Degree": "To Update Degree",
+		"Year": "2019"
+	},
+	{
+		"Country": "Zambia",
+		"University": "One 1",
+		"Title": "M.B.A",
+		"Degree": "Updated Degree",
+		"Year": "2018"
+	},
+	{
+		"Country": "Vietnam",
+		"University": "Hanoi University of Science and Technology",
+		"Title": "MFA",
+		"Degree": "Science and Technology",
+		"Year": "2017"
+	},
+	{
+		"Country": "Venezuela",
+		"University": "Universidad de Los Andes Duplicate",
+		"Title": "PHD",
+		"Degree": "Life Science",
+		"Year": "2016"
+	},
+	{
+		"Country": "Afghanistan",
+		"University": "One 1",
+		"Title": "Associate",
+		"Degree": "Technology",
+		"Year": "2024"
+	},
+	{
+		"Country": "Albania",
+		"University": "Two LongName 200Char 23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+		"Title": "B.A",
+		"Degree": "Business",
+		"Year": "2023"
+	},
+	{
+		"Country": "Algeria",
+		"University": "Three SpecialChar !@#$%^&*()[];./>?{}",
+		"Title": "BArch",
+		"Degree": "!@#$%^&*()[];./>?{}",
+		"Year": "2022"
+	},
+	{
+		"Country": "Andorra",
+		"University": "Four",
+		"Title": "BFA",
+		"Degree": "<input type='text'>",
+		"Year": "2021"
+	},
+	{
+		"Country": "Angola",
+		"University": "Five",
+		"Title": "B.Sc",
+		"Degree": "Degree",
+		"Year": "2020"
+	},
+	{
+		"Country": "China",
+		"University": "北大",
+		"Title": "B.Tech",
+		"Degree": "高等教育",
+		"Year": "1995"
+	},
+	{
+		"Country": "Japan",
+		"University": "東京大学",
+		"Title": "M.Tech",
+		"Degree": "薬",
+		"Year": "1994"
+	}
+]
