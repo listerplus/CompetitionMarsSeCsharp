@@ -25,12 +25,18 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             EducationTab eduTab = new EducationTab(driver);
             EduAssertHelper eduAssert = new EduAssertHelper(driver);
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            eduTab.DeleteEduByModel(eduModel);
+
+            // Start Test
             eduTab.AddEducation(eduModel.University, eduModel.Country, eduModel.Title, eduModel.Degree, eduModel.Year);
             eduAssert.AssertBubble("added");
             bool isPresent = eduTab.IsEducationPresent(eduModel.University, eduModel.Country, eduModel.Title, eduModel.Degree, eduModel.Year);
             Assert.IsTrue(isPresent);
-            // Remove added item to maintain state
-            eduTab.IconRemoveLast.Click();
+
+            // After Test: Remove added item to maintain state
+            eduTab.DeleteEduByModel(eduModel);
         }
 
         [Test]
@@ -39,26 +45,26 @@ namespace CompetitionMarsSeCsharp.Tests
             EducationTab eduTab = new EducationTab(driver);
             EduAssertHelper eduAssert = new EduAssertHelper(driver);
             var eduModel = EduJsonDataSource();
-            int modelCount = eduModel.Count;
-            //Random random = new Random();
-            //int index = random.Next(0, modelCount);
             int index = 0;
+            int newIndex = 1;
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            eduTab.DeleteEduByModel(eduModel[index]);
+            eduTab.DeleteEduByModel(eduModel[newIndex]);
+
+            // Start Test
             // Select item from source to add then update after
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Thread.Sleep(1000);
-
-            //int exclude = index;
-            //int newIndex;
-            int newIndex = 1;
-            //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
             eduTab.UpdateEduItemByModel(eduModel[index], eduModel[newIndex]);
             eduAssert.AssertBubble("updated");
 
             bool isPresent = eduTab.IsEducationPresent(eduModel[newIndex].University, eduModel[newIndex].Country, eduModel[newIndex].Title, eduModel[newIndex].Degree, eduModel[newIndex].Year);
             Assert.IsTrue(isPresent);
 
-            // Remove added item to maintain state
-            eduTab.IconRemoveLast.Click();
+            // After Test:Remove data used if there is to maintain state
+            eduTab.DeleteEduByModel(eduModel[index]);
+            eduTab.DeleteEduByModel(eduModel[newIndex]);
         }
 
         [Test]
@@ -88,9 +94,12 @@ namespace CompetitionMarsSeCsharp.Tests
             EducationTab eduTab = new EducationTab(driver);
             EduAssertHelper eduAssert = new EduAssertHelper(driver);
             var eduModel = EduJsonDataSource();
-            //Random random = new Random();
-            //int index = random.Next(0, eduModel.Count);
             int index = 3;
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            eduTab.DeleteEduByModel(eduModel[index]);
+
+            // Start Test
             // Select item from source to add then add again
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             Thread.Sleep(1000);
@@ -99,9 +108,9 @@ namespace CompetitionMarsSeCsharp.Tests
             eduTab.AddEducation(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
             eduAssert.AssertBubble("error-duplicate");
             Assert.That(eduTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
-            // remove added
-            int row = eduTab.GetEducationItemRow(eduModel[index].University, eduModel[index].Country, eduModel[index].Title, eduModel[index].Degree, eduModel[index].Year);
-            eduTab.ClickRemoveIcon(row);
+
+            // After Test:Remove data used if there is to maintain state
+            eduTab.DeleteEduByModel(eduModel[index]);
         }
 
         [Test]
@@ -115,7 +124,7 @@ namespace CompetitionMarsSeCsharp.Tests
             eduTab.BtnCancel.Click();
         }
 
-        [TearDown]
+        //[TearDown]
         public void RemoveItems()
         {
             // Remove all items

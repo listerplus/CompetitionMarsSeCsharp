@@ -26,13 +26,19 @@ namespace CompetitionMarsSeCsharp.Tests
         {
             CertificationsTab certTab = new CertificationsTab(driver);
             CertAssertHelper certAssert = new CertAssertHelper(driver);
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            certTab.DeleteCertByModel(certModel);
+
+            // Start Test
             certTab.AddCertification(certModel.Certificate, certModel.From, certModel.Year);
             certAssert.AssertBubble("added", certModel.Certificate);
             bool isPresent = certTab.IsCertificationPresent(certModel.Certificate, certModel.From, certModel.Year);
             Assert.IsTrue(isPresent);
             ReportLog.Info($"Successfully added cert: {certModel.Certificate}");
-            // Remove added item to maintain state
-            certTab.IconRemoveLast.Click();
+
+            // After Test: Remove added item to maintain state
+            certTab.DeleteCertByModel(certModel);
         }
 
         [Test]
@@ -42,10 +48,18 @@ namespace CompetitionMarsSeCsharp.Tests
             CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
             int modelCount = certModel.Count;
+            int index = 0;
+            int newIndex = 1;
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            certTab.DeleteCertByModel(certModel[index]);
+            certTab.DeleteCertByModel(certModel[newIndex]);
+
             // Commenting out using random since we will be using an item not being used by other tests
             //Random random = new Random();
             //int index = random.Next(0, modelCount);
-            int index = 0;
+
+            // Start Test
             // Select item 1 from source to add then update after. Item 1 is not used on other tests.
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
@@ -53,7 +67,6 @@ namespace CompetitionMarsSeCsharp.Tests
             //int exclude = index;
             //int newIndex;
             //do { newIndex = random.Next(0, modelCount); } while (newIndex == exclude);
-            int newIndex = 1;
             certTab.UpdateCertItemByModel(certModel[index], certModel[newIndex]);
             certAssert.AssertBubble("updated", certModel[newIndex].Certificate);
 
@@ -63,8 +76,9 @@ namespace CompetitionMarsSeCsharp.Tests
                 $"\nFrom Cert: {certModel[index].Certificate}, from: {certModel[index].From}, year: {certModel[index].Year}" +
                 $"\nTo Cert: {certModel[newIndex].Certificate}, from: {certModel[newIndex].From}, year: {certModel[newIndex].Year}");
 
-            // Remove added item to maintain state
-            certTab.IconRemoveLast.Click();
+            // After Test: Remove data used if there is to maintain state
+            certTab.DeleteCertByModel(certModel[index]);
+            certTab.DeleteCertByModel(certModel[newIndex]);
         }
 
         [Test]
@@ -73,9 +87,15 @@ namespace CompetitionMarsSeCsharp.Tests
             CertificationsTab certTab = new CertificationsTab(driver);
             CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
+            int index = 2;
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            certTab.DeleteCertByModel(certModel[index]);
+
             //Random random = new Random();
             //int index = random.Next(0, certModel.Count);
-            int index = 2;
+
+            // Start Test
             // Select item 3 from source to add then delete after
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
@@ -95,9 +115,15 @@ namespace CompetitionMarsSeCsharp.Tests
             CertificationsTab certTab = new CertificationsTab(driver);
             CertAssertHelper certAssert = new CertAssertHelper(driver);
             var certModel = CertJsonDataSource();
+            int index = 3;
+
+            // Before Start: Delete specific data for this test and not wipe out other data
+            certTab.DeleteCertByModel(certModel[index]);
+
             //Random random = new Random();
             //int index = random.Next(0, certModel.Count);
-            int index = 3;
+
+            // Start Test
             // Select item 4 (index 3) from source to add then add again
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             Thread.Sleep(1000);
@@ -106,9 +132,9 @@ namespace CompetitionMarsSeCsharp.Tests
             certTab.AddCertification(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
             certAssert.AssertBubble("error-duplicate");
             Assert.That(certTab.GetRowCount(), Is.EqualTo(rowCount)); // Check Number of rows is still the same
-            // remove added
-            int row = certTab.GetCertificationItemRow(certModel[index].Certificate, certModel[index].From, certModel[index].Year);
-            certTab.ClickRemoveIcon(row);
+
+            // After Test: Remove data used if there is to maintain state
+            certTab.DeleteCertByModel(certModel[index]);
         }
 
         [Test]
@@ -122,7 +148,7 @@ namespace CompetitionMarsSeCsharp.Tests
             certTab.BtnCancel.Click();
         }
 
-        [TearDown]
+        //[TearDown]
         public void RemoveItems()
         {
             // Reset State: Remove all items remaining

@@ -1,4 +1,5 @@
-﻿using CompetitionMarsSeCsharp.TestData;
+﻿using System;
+using CompetitionMarsSeCsharp.TestData;
 using CompetitionMarsSeCsharp.Utilities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -123,35 +124,14 @@ namespace CompetitionMarsSeCsharp.Pages.Profile
             BtnUpdate.Click();
         }
 
-        public void AssertBubble(string action) // action: added, updated, deleted, error
+        public void DeleteEduByModel(EduModel model)
         {
-            Thread.Sleep(500);
-            switch (action)
+            int row = GetEducationItemRow(model.University, model.Country, model.Title, model.Degree, model.Year);
+            if (row > 0)
             {
-                case "updated":
-                    Assert.AreEqual($"Education as been updated", bubbleSuccess.Text);
-                    Assert.AreEqual(popupSuccessColor, bubbleSuccess.GetCssValue("color"));
-                    break;
-                case "added":
-                    Assert.AreEqual($"Education has been added", bubbleSuccess.Text);
-                    Assert.AreEqual(popupSuccessColor, bubbleSuccess.GetCssValue("color"));
-                    break;
-                case "deleted":
-                    Assert.AreEqual($"Education entry successfully removed", bubbleSuccess.Text);
-                    Assert.AreEqual(popupSuccessColor, bubbleSuccess.GetCssValue("color"));
-                    break;
-                case "error-duplicate":
-                    Assert.AreEqual($"This information is already exist.", bubbleError.Text);
-                    ReportLog.Info($"bg color: {bubbleError.GetCssValue("color")}");
-                    break;
-                case "error-incomplete":
-                    Assert.That(bubbleError.Text, Is.EqualTo($"Please enter all the fields"));
-                    break;
-                default:
-                    Assert.Fail();
-                    break;
+                //ReportLog.Info($"Removed. Edu: {model.Title}");
+                ClickRemoveIcon(row);
             }
-            Thread.Sleep(2000);
         }
 
     }

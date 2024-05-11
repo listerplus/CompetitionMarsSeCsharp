@@ -1,4 +1,6 @@
-﻿using CompetitionMarsSeCsharp.TestData;
+﻿using System;
+using System.Reflection;
+using CompetitionMarsSeCsharp.TestData;
 using CompetitionMarsSeCsharp.Utilities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -111,5 +113,14 @@ namespace CompetitionMarsSeCsharp.Pages.Profile
             BtnUpdate.Click();
         }
 
+        public void DeleteCertByModel(CertModel model)
+        {
+            int row = GetCertificationItemRow(model.Certificate, model.From, model.Year);
+            if ( row > 0 )
+            {
+                //ReportLog.Info($"Removed. Cert: {model.Certificate}");
+                ClickRemoveIcon(row);
+            }
+        }
     }
 }
